@@ -3,7 +3,7 @@
 Клиент **Mentor-App** к Laravel API из корня монорепо: авторизация (Sanctum), дашборд цели «Вьетнам», сообщения ментора, текст и удержание микрофона для AI.
 
 Родительский проект и API: [корневой README](../README.md).  
-Репозиторий на GitHub: **https://github.com/__GITHUB_OWNER__/mentor-app**
+Репозиторий на GitHub: **https://github.com/prod-broke-again/mentor-app**
 
 ## UI (cyberpunk redesign)
 

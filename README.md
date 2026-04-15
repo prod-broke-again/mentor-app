@@ -6,7 +6,7 @@
 
 ## Репозиторий на GitHub
 
-**https://github.com/__GITHUB_OWNER__/mentor-app** — после первого пуша подставьте свой аккаунт вместо `__GITHUB_OWNER__` или выполните шаг обновления URL из скрипта деплоя (см. историю коммитов).
+**https://github.com/prod-broke-again/mentor-app**
 
 ## Требования
 
