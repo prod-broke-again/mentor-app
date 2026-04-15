@@ -1,0 +1,2 @@
+/// Finance: domain layer.
+library;

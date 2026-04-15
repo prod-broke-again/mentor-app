@@ -1,0 +1,4 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- HTTP к локальному Laravel в debug (убрать/заменить на HTTPS в production). -->
+    <application android:usesCleartextTraffic="true" />
+</manifest>
