@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Log;
 
 final class TimewebAiService implements AiProviderInterface
 {
+    /**
+     * Параметр $model из контракта для Timeweb не используется: модель задаётся в панели Timeweb
+     * и дублируется в `config('services.ai.timeweb.model')` / `TIMEWEB_AI_MODEL`.
+     */
     public function complete(
         string $systemPrompt,
         string $userPrompt,
@@ -25,6 +29,8 @@ final class TimewebAiService implements AiProviderInterface
             return null;
         }
 
+        $resolvedModel = (string) config('services.ai.timeweb.model', 'gemini-2.0-flash');
+
         $url = $baseUrl.'/chat/completions';
 
         try {
@@ -33,7 +39,7 @@ final class TimewebAiService implements AiProviderInterface
                 ->connectTimeout(10)
                 ->retry(2, 500, throw: false)
                 ->post($url, [
-                    'model' => $model,
+                    'model' => $resolvedModel,
                     'messages' => [
                         ['role' => 'system', 'content' => $systemPrompt],
                         ['role' => 'user', 'content' => $userPrompt],

@@ -40,6 +40,8 @@ return [
         'timeweb' => [
             'api_key' => env('TIMEWEB_AI_API_KEY'),
             'base_url' => env('TIMEWEB_AI_BASE_URL'),
+            // Имя модели должно совпадать с выбранной в панели Timeweb (запрос всегда уходит с этим полем).
+            'model' => env('TIMEWEB_AI_MODEL', 'gemini-2.0-flash'),
         ],
         'gptunnel' => [
             'api_key' => env('GPTUNNEL_API_KEY'),

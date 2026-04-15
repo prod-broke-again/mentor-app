@@ -23,10 +23,24 @@ php artisan key:generate
 php artisan migrate
 ```
 
+Для веб-интерфейса (Vite + Vue): `npm install` и при необходимости `npm run dev` или `npm run build`.
+
+Проверка **Timeweb AI** после заполнения `TIMEWEB_AI_API_KEY` и `TIMEWEB_AI_BASE_URL` в `.env`:
+
+```bash
+php artisan ai:test-timeweb
+```
+
+Свой текст запроса (модель для Timeweb задаётся в панели Timeweb и в `TIMEWEB_AI_MODEL`, по умолчанию `gemini-2.0-flash`):
+
+```bash
+php artisan ai:test-timeweb --prompt="Скажи одно слово: работает."
+```
+
 В `.env` настройте провайдеры AI (см. `config/services.php` → `ai`):
 
 - `AI_PROVIDER` — `timeweb` или `gptunnel` (дефолт для DI `AiProviderInterface`)
-- Timeweb: `TIMEWEB_AI_API_KEY`, `TIMEWEB_AI_BASE_URL` ([документация Timeweb Cloud](https://timeweb.cloud/docs))
+- Timeweb: `TIMEWEB_AI_API_KEY`, `TIMEWEB_AI_BASE_URL`, опционально `TIMEWEB_AI_MODEL` (должно совпадать с моделью в панели Timeweb, по умолчанию `gemini-2.0-flash`) ([документация Timeweb Cloud](https://timeweb.cloud/docs))
 - GPTunnel: `GPTUNNEL_API_KEY`, при необходимости `GPTUNNEL_AI_BASE_URL` ([gptunnel.ru](https://gptunnel.ru))
 - Для `/api/ai/process` с **аудио** нужен Whisper на OpenAI: `OPENAI_API_KEY`, при необходимости `OPENAI_BASE_URL`, `OPENAI_TRANSCRIPTION_MODEL`
 

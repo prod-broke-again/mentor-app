@@ -9,7 +9,6 @@ import '../../../../core/network/api_service.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../data/dashboard_repository.dart';
 import '../bloc/home_bloc.dart';
-import '../../domain/dashboard_models.dart';
 import '../widgets/cyber_grid_background.dart';
 import '../widgets/vietnam_progress_ring.dart';
 import '../widgets/mentor_message_bubble.dart';
@@ -166,7 +165,7 @@ class _HomeViewState extends State<_HomeView> {
                                 const EdgeInsets.fromLTRB(16, 10, 16, 16),
                             sliver: SliverList.separated(
                               itemCount: messages.length,
-                              separatorBuilder: (_, __) =>
+                              separatorBuilder: (_, _) =>
                                   const SizedBox(height: 10),
                               itemBuilder: (_, i) =>
                                   MentorMessageBubble(message: messages[i]),
@@ -510,7 +509,7 @@ class _InputRow extends StatelessWidget {
                 hintText: '> напиши ментору...',
                 hintStyle: TextStyle(
                   fontFamily: 'monospace',
-                  color: Colors.white18,
+                  color: Colors.white.withValues(alpha: 0.18),
                   fontSize: 13,
                 ),
                 enabledBorder: OutlineInputBorder(
@@ -560,7 +559,9 @@ class _InputRow extends StatelessWidget {
               child: Icon(
                 Icons.send_rounded,
                 size: 20,
-                color: isSending ? Colors.white18 : cyber.neonCyan,
+                color: isSending
+                    ? Colors.white.withValues(alpha: 0.18)
+                    : cyber.neonCyan,
               ),
             ),
           ),
