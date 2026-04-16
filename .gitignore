@@ -26,3 +26,4 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+/activity-agent/mentor-activity-agent.exe

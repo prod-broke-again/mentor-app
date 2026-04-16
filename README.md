@@ -58,6 +58,7 @@ php artisan serve
 | GET | `/api/dashboard` | прогресс цели + последние сообщения ментора |
 | POST | `/api/ai/process` | JSON `{ "text": "..." }` или multipart `audio` (Sanctum) |
 | POST | `/api/ai/ask` | JSON `{ "prompt": "...", "provider": "gptunnel" }` — smoke-тест провайдера **без Sanctum** |
+| POST | `/api/v1/activity/sessions` | активное окно Windows: `exe`, `window_title`, длительность (Sanctum) — см. [docs/activity-api.md](docs/activity-api.md), агент: [activity-agent/README.md](activity-agent/README.md) |
 
 Пример (Windows `cmd`):
 

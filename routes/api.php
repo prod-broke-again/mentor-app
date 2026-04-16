@@ -1,7 +1,8 @@
 <?php
 
-use App\Http\Controllers\AIProcessController;
 use App\Http\Controllers\AiController;
+use App\Http\Controllers\AIProcessController;
+use App\Http\Controllers\Api\ActivitySessionController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DashboardController;
 use Illuminate\Support\Facades\Route;
@@ -17,4 +18,8 @@ Route::middleware('auth:sanctum')->group(function (): void {
     Route::get('user', [AuthController::class, 'user']);
     Route::get('dashboard', DashboardController::class);
     Route::post('ai/process', AIProcessController::class)->middleware('throttle:20,1');
+
+    Route::prefix('v1')->middleware('throttle:300,1')->group(function (): void {
+        Route::post('activity/sessions', [ActivitySessionController::class, 'store']);
+    });
 });

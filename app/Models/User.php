@@ -57,4 +57,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(MentorMessage::class);
     }
+
+    /**
+     * @return HasMany<ActivitySession, $this>
+     */
+    public function activitySessions(): HasMany
+    {
+        return $this->hasMany(ActivitySession::class);
+    }
 }
