@@ -5,17 +5,17 @@
 Родительский проект и API: [корневой README](../README.md).  
 Репозиторий на GitHub: **https://github.com/prod-broke-again/mentor-app**
 
-## UI (cyberpunk redesign)
+## UI (Minimalist Soft UI)
 
-Интерфейс выводился отдельной итерацией дизайна. Сейчас в коде:
-
-- **`ThemeExtension<CyberColors>`** — палитра (neon cyan `#00FFFF`, neon green `#39FF14`, neon magenta, surface deep `#000000`, линии сетки) через `Theme.of(context).extension<CyberColors>()` в [lib/core/theme/app_theme.dart](lib/core/theme/app_theme.dart).
+- **`ThemeExtension<SoftUiColors>`** — семантические цвета (фон, surface, акцент, границы, сетка) в [lib/core/theme/soft_ui_colors.dart](lib/core/theme/soft_ui_colors.dart), темы **light/dark** в [lib/core/theme/app_theme.dart](lib/core/theme/app_theme.dart) (Material 3 + **Instrument Sans** через `google_fonts`).
+- **Быстрый вход:** при сохранённом токене — опциональный запрос биометрии (`local_auth`), затем проверка сессии `GET /api/user` ([lib/app.dart](lib/app.dart), [lib/core/security/biometric_auth.dart](lib/core/security/biometric_auth.dart)).
 - **[lib/features/finance/presentation/widgets/](lib/features/finance/presentation/widgets/)**
-  - `cyber_grid_background.dart` — фон: сетка + виньетирование.
-  - `vietnam_progress_ring.dart` — кольцо прогресса (`CustomPainter`, свечение, градиент дуги, подпись Destination: Vietnam).
-  - `mentor_message_bubble.dart` — стеклянный пузырь (`BackdropFilter`), разметка текста через **`MarkdownBody`** + `MarkdownStyleSheet`.
-  - `cyber_mic_button.dart` — шестиугольник, неоновая обводка, анимация при записи.
-- **[lib/features/finance/presentation/pages/home_page.dart](lib/features/finance/presentation/pages/home_page.dart)** — `CyberGridBackground`, `CustomScrollView`, закреплённый sliver с прогресс-кольцом (compact при скролле), blur.
+  - `ambient_background.dart` — спокойный фон и едва заметная сетка.
+  - `vietnam_progress_ring.dart` — мягкое кольцо прогресса без неона.
+  - `mentor_message_bubble.dart` — карточка сообщения + Markdown.
+  - `soft_mic_button.dart` — круглая кнопка микрофона (soft shadow).
+- **[lib/features/finance/presentation/widgets/home/](lib/features/finance/presentation/widgets/home/)** — `HomeTopBar`, `HomeInputRow`, `HomeProgressHeaderDelegate` (вынесены из `home_page`).
+- **[lib/features/finance/presentation/pages/home_page.dart](lib/features/finance/presentation/pages/home_page.dart)** — основной экран чата и прогресса.
 
 Зависимость **`flutter_markdown`** указана в [pubspec.yaml](pubspec.yaml).
 
@@ -46,11 +46,12 @@ flutter run --dart-define=API_BASE_URL=http://127.0.0.1:8000
 
 | Путь | Назначение |
 |------|------------|
-| `core/theme/` | `AppTheme`, `CyberColors` |
-| `core/network/` | `ApiService`, исключения |
+| `core/theme/` | `AppTheme`, `SoftUiColors` |
+| `core/network/` | `ApiService`, `ApiException` |
+| `core/security/` | `BiometricAuth` |
 | `core/storage/` | `TokenStorage` (Sanctum token) |
 | `features/auth/` | экран входа |
-| `features/finance/` | BLoC, репозиторий, **presentation/widgets**, `home_page` |
+| `features/finance/` | BLoC, репозиторий, виджеты, `home_page` |
 
 ## Тесты
 

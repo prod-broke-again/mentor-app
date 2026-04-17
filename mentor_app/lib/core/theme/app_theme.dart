@@ -1,94 +1,111 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-// ─────────────────────────────────────────────────────────────────────────────
-// CyberColors — ThemeExtension для доступа через Theme.of(context).extension
-// ─────────────────────────────────────────────────────────────────────────────
+import 'soft_ui_colors.dart';
 
-@immutable
-class CyberColors extends ThemeExtension<CyberColors> {
-  const CyberColors({
-    required this.neonCyan,
-    required this.neonGreen,
-    required this.neonMagenta,
-    required this.surfaceDeep,
-    required this.gridLine,
-  });
-
-  final Color neonCyan;
-  final Color neonGreen;
-  final Color neonMagenta;
-  final Color surfaceDeep;
-  final Color gridLine;
-
-  /// Значения по умолчанию из дизайн-системы (Cyberpunk Digital Assistant).
-  static const CyberColors defaults = CyberColors(
-    neonCyan: Color(0xFF00FFFF),
-    neonGreen: Color(0xFF39FF14),
-    neonMagenta: Color(0xFFFF00E5),
-    surfaceDeep: Color(0xFF000000),
-    gridLine: Color(0xFF00FFFF),
-  );
-
-  @override
-  CyberColors copyWith({
-    Color? neonCyan,
-    Color? neonGreen,
-    Color? neonMagenta,
-    Color? surfaceDeep,
-    Color? gridLine,
-  }) =>
-      CyberColors(
-        neonCyan: neonCyan ?? this.neonCyan,
-        neonGreen: neonGreen ?? this.neonGreen,
-        neonMagenta: neonMagenta ?? this.neonMagenta,
-        surfaceDeep: surfaceDeep ?? this.surfaceDeep,
-        gridLine: gridLine ?? this.gridLine,
-      );
-
-  @override
-  CyberColors lerp(CyberColors? other, double t) {
-    if (other == null) return this;
-    return CyberColors(
-      neonCyan: Color.lerp(neonCyan, other.neonCyan, t)!,
-      neonGreen: Color.lerp(neonGreen, other.neonGreen, t)!,
-      neonMagenta: Color.lerp(neonMagenta, other.neonMagenta, t)!,
-      surfaceDeep: Color.lerp(surfaceDeep, other.surfaceDeep, t)!,
-      gridLine: Color.lerp(gridLine, other.gridLine, t)!,
-    );
-  }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// AppTheme — фабрика ThemeData
-// ─────────────────────────────────────────────────────────────────────────────
-
+/// Minimalist Soft UI — light & dark Material 3 themes.
 abstract final class AppTheme {
-  // Backward-compat static shortcuts
-  static const Color neonCyan = Color(0xFF00FFFF);
-  static const Color neonGreen = Color(0xFF39FF14);
-  static const Color neonMagenta = Color(0xFFFF00E5);
-  static const Color surfaceDeep = Color(0xFF000000);
+  static ThemeData lightSoft() => _build(brightness: Brightness.light, soft: SoftUiColors.light);
 
-  static ThemeData darkCyberpunk() {
-    final base = ThemeData.dark(useMaterial3: true);
+  static ThemeData darkSoft() => _build(brightness: Brightness.dark, soft: SoftUiColors.dark);
+
+  static ThemeData _build({required Brightness brightness, required SoftUiColors soft}) {
+    final base = ThemeData(
+      useMaterial3: true,
+      brightness: brightness,
+    );
+
+    final colorScheme = ColorScheme(
+      brightness: brightness,
+      primary: soft.accent,
+      onPrimary: soft.accentForeground,
+      secondary: soft.accentMuted,
+      onSecondary: soft.accentForeground,
+      error: brightness == Brightness.dark ? const Color(0xFFF87171) : const Color(0xFFDC2626),
+      onError: Colors.white,
+      surface: soft.surface,
+      onSurface: brightness == Brightness.dark ? const Color(0xFFE8EAED) : const Color(0xFF2D3436),
+      onSurfaceVariant: brightness == Brightness.dark ? const Color(0xFF9CA3AF) : const Color(0xFF64748B),
+      outline: soft.outline,
+      outlineVariant: soft.outlineStrong,
+      shadow: Colors.black.withValues(alpha: brightness == Brightness.dark ? 0.4 : 0.08),
+      scrim: Colors.black54,
+      inverseSurface: brightness == Brightness.dark ? const Color(0xFFF1F5F9) : const Color(0xFF1E293B),
+      onInverseSurface: brightness == Brightness.dark ? const Color(0xFF1E293B) : const Color(0xFFF8FAFC),
+      inversePrimary: soft.accentMuted,
+      surfaceTint: soft.accent,
+      tertiary: soft.success,
+      onTertiary: Colors.white,
+    );
+
+    final textTheme = GoogleFonts.instrumentSansTextTheme(base.textTheme).apply(
+      bodyColor: colorScheme.onSurface,
+      displayColor: colorScheme.onSurface,
+    );
+
     return base.copyWith(
-      scaffoldBackgroundColor: surfaceDeep,
-      colorScheme: base.colorScheme.copyWith(
-        primary: neonCyan,
-        secondary: neonMagenta,
-        surface: const Color(0xFF0D0D12),
-        onPrimary: Colors.black,
-        onSecondary: Colors.white,
-      ),
-      appBarTheme: const AppBarTheme(
-        backgroundColor: surfaceDeep,
-        foregroundColor: neonCyan,
+      colorScheme: colorScheme,
+      scaffoldBackgroundColor: soft.background,
+      textTheme: textTheme,
+      extensions: [soft],
+      appBarTheme: AppBarTheme(
         elevation: 0,
+        scrolledUnderElevation: 0,
+        backgroundColor: soft.background,
+        foregroundColor: colorScheme.onSurface,
+        titleTextStyle: textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
       ),
-      progressIndicatorTheme: const ProgressIndicatorThemeData(
-        color: neonCyan,
+      cardTheme: CardThemeData(
+        elevation: 0,
+        color: soft.surfaceElevated,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+          side: BorderSide(color: soft.outline.withValues(alpha: 0.6)),
+        ),
+        shadowColor: Colors.transparent,
       ),
-      extensions: const [CyberColors.defaults],
+      filledButtonTheme: FilledButtonThemeData(
+        style: FilledButton.styleFrom(
+          elevation: 0,
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          shadowColor: Colors.transparent,
+        ),
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: soft.surface,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: BorderSide(color: soft.outline),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: BorderSide(color: soft.outline),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: BorderSide(color: soft.accent, width: 2),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: BorderSide(color: colorScheme.error),
+        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        labelStyle: textTheme.bodyMedium?.copyWith(color: colorScheme.onSurfaceVariant),
+        hintStyle: textTheme.bodyMedium?.copyWith(color: colorScheme.onSurfaceVariant.withValues(alpha: 0.7)),
+      ),
+      snackBarTheme: SnackBarThemeData(
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: soft.surfaceElevated,
+        contentTextStyle: textTheme.bodyMedium?.copyWith(color: colorScheme.onSurface),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(14),
+          side: BorderSide(color: soft.outline),
+        ),
+      ),
+      progressIndicatorTheme: ProgressIndicatorThemeData(color: soft.accent),
+      dividerTheme: DividerThemeData(color: soft.outline, thickness: 1),
     );
   }
 }

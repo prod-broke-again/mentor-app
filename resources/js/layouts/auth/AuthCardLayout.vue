@@ -18,7 +18,7 @@ defineProps<{
 
 <template>
     <div
-        class="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10"
+        class="flex min-h-svh flex-col items-center justify-center gap-6 bg-background p-6 md:p-10"
     >
         <div class="flex w-full max-w-md flex-col gap-6">
             <Link
@@ -33,9 +33,11 @@ defineProps<{
             </Link>
 
             <div class="flex flex-col gap-6">
-                <Card class="rounded-xl">
+                <Card class="rounded-2xl border-border/70 shadow-soft">
                     <CardHeader class="px-10 pt-8 pb-0 text-center">
-                        <CardTitle class="text-xl">{{ title }}</CardTitle>
+                        <CardTitle class="text-xl font-semibold tracking-tight">{{
+                            title
+                        }}</CardTitle>
                         <CardDescription>
                             {{ description }}
                         </CardDescription>

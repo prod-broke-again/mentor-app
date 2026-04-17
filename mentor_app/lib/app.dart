@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
 import 'core/network/api_service.dart';
+import 'core/security/biometric_auth.dart';
 import 'core/storage/token_storage.dart';
 import 'core/theme/app_theme.dart';
 import 'features/auth/presentation/login_page.dart';
 import 'features/finance/presentation/pages/home_page.dart';
 
-/// Корень приложения: тёмная тема + переключение login / home по токену.
+/// Корень приложения: Soft UI темы + переключение login / home по сессии.
 class MentorBootstrap extends StatefulWidget {
   const MentorBootstrap({super.key, required this.api, required this.tokenStorage});
 
@@ -30,10 +31,45 @@ class _MentorBootstrapState extends State<MentorBootstrap> {
   Future<void> _checkSession() async {
     final t = await widget.tokenStorage.readToken();
     if (!mounted) return;
-    setState(() {
-      _loggedIn = t != null && t.isNotEmpty;
-      _checking = false;
-    });
+
+    if (t == null || t.isEmpty) {
+      setState(() {
+        _loggedIn = false;
+        _checking = false;
+      });
+      return;
+    }
+
+    final bio = BiometricAuth();
+    if (await bio.isAvailable) {
+      final ok = await bio.authenticate(
+        localizedReason: 'Подтвердите личность, чтобы открыть Mentor',
+      );
+      if (!mounted) return;
+      if (!ok) {
+        setState(() {
+          _loggedIn = false;
+          _checking = false;
+        });
+        return;
+      }
+    }
+
+    try {
+      await widget.api.validateSession();
+      if (!mounted) return;
+      setState(() {
+        _loggedIn = true;
+        _checking = false;
+      });
+    } catch (_) {
+      await widget.tokenStorage.clear();
+      if (!mounted) return;
+      setState(() {
+        _loggedIn = false;
+        _checking = false;
+      });
+    }
   }
 
   void _onLoggedIn() => setState(() => _loggedIn = true);
@@ -45,12 +81,36 @@ class _MentorBootstrapState extends State<MentorBootstrap> {
     return MaterialApp(
       title: 'Mentor',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.darkCyberpunk(),
-      home: _checking
-          ? const Scaffold(body: Center(child: CircularProgressIndicator()))
-          : _loggedIn
-              ? HomePage(api: widget.api, onLogout: _onLoggedOut)
-              : LoginPage(api: widget.api, onLoggedIn: _onLoggedIn),
+      theme: AppTheme.lightSoft(),
+      darkTheme: AppTheme.darkSoft(),
+      themeMode: ThemeMode.system,
+      home: Builder(
+        builder: (context) {
+          if (_checking) {
+            return Scaffold(
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const CircularProgressIndicator(),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Проверка сессии…',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+          if (_loggedIn) {
+            return HomePage(api: widget.api, onLogout: _onLoggedOut);
+          }
+          return LoginPage(api: widget.api, onLoggedIn: _onLoggedIn);
+        },
+      ),
     );
   }
 }

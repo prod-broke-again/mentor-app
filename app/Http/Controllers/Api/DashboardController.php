@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Goal;
 use App\Models\MentorMessage;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -14,7 +15,7 @@ class DashboardController extends Controller
 
     public function __invoke(Request $request): JsonResponse
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = $request->user();
 
         $goal = Goal::query()
@@ -26,8 +27,12 @@ class DashboardController extends Controller
         $messages = MentorMessage::query()
             ->where('user_id', $user->id)
             ->orderByDesc('created_at')
+            ->orderByDesc('id')
             ->limit(20)
-            ->get(['id', 'body', 'action_type', 'action_amount', 'action_category', 'created_at']);
+            ->get(['id', 'body', 'action_type', 'action_amount', 'action_category', 'created_at'])
+            // Последние 20 в хронологии: старые сверху, новые снизу (как в чате).
+            ->reverse()
+            ->values();
 
         return response()->json([
             'target_amount_rub' => self::DEFAULT_TARGET_RUB,

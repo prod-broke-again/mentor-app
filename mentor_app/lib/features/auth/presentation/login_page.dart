@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/network/api_exception.dart';
 import '../../../core/network/api_service.dart';
-import '../../../core/theme/app_theme.dart';
+import '../../../core/theme/soft_ui_colors.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key, required this.api, required this.onLoggedIn});
@@ -15,10 +15,13 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final _formKey = GlobalKey<FormState>();
   final _email = TextEditingController();
   final _password = TextEditingController();
   bool _loading = false;
-  String? _error;
+  String? _generalError;
+  String? _emailError;
+  String? _passwordError;
 
   @override
   void dispose() {
@@ -30,7 +33,9 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> _submit() async {
     setState(() {
       _loading = true;
-      _error = null;
+      _generalError = null;
+      _emailError = null;
+      _passwordError = null;
     });
     try {
       await widget.api.login(
@@ -39,9 +44,13 @@ class _LoginPageState extends State<LoginPage> {
       );
       widget.onLoggedIn();
     } on ApiException catch (e) {
-      setState(() => _error = e.message);
+      setState(() {
+        _emailError = e.firstErrorForField('email');
+        _passwordError = e.firstErrorForField('password');
+        _generalError = e.message;
+      });
     } catch (e) {
-      setState(() => _error = e.toString());
+      setState(() => _generalError = e.toString());
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -49,74 +58,127 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final soft = Theme.of(context).extension<SoftUiColors>() ?? SoftUiColors.light;
+    final scheme = Theme.of(context).colorScheme;
+    final brightness = Theme.of(context).brightness;
+
     return Scaffold(
+      backgroundColor: soft.background,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(height: 32),
-              Text(
-                'КИБЕР-БРО',
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      color: AppTheme.neonCyan,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: 4,
-                    ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Вход в Mentor',
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Colors.white70,
-                    ),
-              ),
-              const SizedBox(height: 48),
-              TextField(
-                controller: _email,
-                keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                  border: OutlineInputBorder(),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: 24),
+                Text(
+                  'Mentor',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: -0.8,
+                        color: scheme.onSurface,
+                      ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _password,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: 'Пароль',
-                  border: OutlineInputBorder(),
+                const SizedBox(height: 8),
+                Text(
+                  'Спокойный вход в приложение',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: scheme.onSurfaceVariant,
+                      ),
                 ),
-              ),
-              if (_error != null) ...[
-                const SizedBox(height: 16),
-                Text(_error!, style: TextStyle(color: AppTheme.neonMagenta)),
+                const SizedBox(height: 40),
+                Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: soft.surfaceElevated,
+                    borderRadius: BorderRadius.circular(24),
+                    border: Border.all(color: soft.outline.withValues(alpha: 0.9)),
+                    boxShadow: SoftUiColors.shadowRaised(brightness),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      TextFormField(
+                        controller: _email,
+                        keyboardType: TextInputType.emailAddress,
+                        autofillHints: const [AutofillHints.email],
+                        textInputAction: TextInputAction.next,
+                        decoration: InputDecoration(
+                          labelText: 'Email',
+                          errorText: _emailError,
+                        ),
+                        validator: (v) {
+                          if (v == null || v.trim().isEmpty) {
+                            return 'Введите email';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        controller: _password,
+                        obscureText: true,
+                        autofillHints: const [AutofillHints.password],
+                        textInputAction: TextInputAction.done,
+                        onFieldSubmitted: (_) => _trySubmit(),
+                        decoration: InputDecoration(
+                          labelText: 'Пароль',
+                          errorText: _passwordError,
+                        ),
+                        validator: (v) {
+                          if (v == null || v.isEmpty) {
+                            return 'Введите пароль';
+                          }
+                          return null;
+                        },
+                      ),
+                      if (_generalError != null &&
+                          (_emailError == null && _passwordError == null)) ...[
+                        const SizedBox(height: 16),
+                        Text(
+                          _generalError!,
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: scheme.error,
+                              ),
+                        ),
+                      ],
+                      const SizedBox(height: 24),
+                      FilledButton(
+                        onPressed: _loading ? null : _trySubmit,
+                        child: _loading
+                            ? const SizedBox(
+                                height: 22,
+                                width: 22,
+                                child: CircularProgressIndicator(strokeWidth: 2),
+                              )
+                            : const Text('Войти'),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 24),
+                Text(
+                  'После входа сессия может запрашивать биометрию на этом устройстве.',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: scheme.onSurfaceVariant,
+                        height: 1.45,
+                      ),
+                ),
               ],
-              const Spacer(),
-              FilledButton(
-                onPressed: _loading ? null : _submit,
-                style: FilledButton.styleFrom(
-                  backgroundColor: AppTheme.neonCyan,
-                  foregroundColor: Colors.black,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                ),
-                child: _loading
-                    ? const SizedBox(
-                        height: 22,
-                        width: 22,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Text('Войти'),
-              ),
-              const SizedBox(height: 24),
-            ],
+            ),
           ),
         ),
       ),
     );
+  }
+
+  void _trySubmit() {
+    if (!(_formKey.currentState?.validate() ?? false)) return;
+    _submit();
   }
 }

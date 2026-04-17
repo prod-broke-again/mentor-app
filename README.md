@@ -70,7 +70,7 @@ curl -X POST http://localhost:8000/api/ai/ask ^
 
 ### Клиент Flutter (кратко про UI)
 
-Cyberpunk-интерфейс: палитра через **`ThemeExtension<CyberColors>`** (`mentor_app/lib/core/theme/app_theme.dart`), сетка и виньетка на фоне, кольцо прогресса «Вьетнам», пузыри сообщений с **Markdown** (`flutter_markdown`), шестиугольная кнопка микрофона с неоном и анимацией записи. Детали — в [mentor_app/README.md](mentor_app/README.md).
+**Minimalist Soft UI:** палитра через **`ThemeExtension<SoftUiColors>`**, темы light/dark и **Instrument Sans** (`google_fonts`), спокойный фон, мягкие тени, кольцо прогресса «Вьетнам», сообщения ментора с **Markdown** (`flutter_markdown`), микрофон push-to-talk, биометрия при старте при наличии токена. Детали — в [mentor_app/README.md](mentor_app/README.md).
 
 ### Безопасность
 

@@ -12,10 +12,10 @@ void main() {
     final api = ApiService(tokenStorage: storage);
     await tester.pumpWidget(
       MaterialApp(
-        theme: AppTheme.darkCyberpunk(),
+        theme: AppTheme.lightSoft(),
         home: LoginPage(api: api, onLoggedIn: () {}),
       ),
     );
-    expect(find.text('КИБЕР-БРО'), findsOneWidget);
+    expect(find.text('Mentor'), findsOneWidget);
   });
 }

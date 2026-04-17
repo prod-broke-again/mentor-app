@@ -61,6 +61,8 @@
 	</array>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Микрофон нужен, чтобы отправлять голосовые сообщения ментору.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Face ID используется для быстрого входа в Mentor.</string>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

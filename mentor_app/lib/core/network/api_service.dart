@@ -59,7 +59,11 @@ final class ApiService {
       }),
     );
     if (res.statusCode != 200) {
-      throw ApiException('Login failed', statusCode: res.statusCode, body: res.body);
+      throw ApiException.fromHttpBody(
+        statusCode: res.statusCode,
+        body: res.body,
+        fallbackMessage: 'Не удалось войти',
+      );
     }
     final map = jsonDecode(res.body) as Map<String, dynamic>;
     final token = map['token'] as String?;
@@ -67,6 +71,21 @@ final class ApiService {
       throw ApiException('No token in login response', statusCode: res.statusCode, body: res.body);
     }
     await _tokenStorage.writeToken(token);
+  }
+
+  /// GET /api/user — validates the stored bearer token.
+  Future<void> validateSession() async {
+    final res = await _client.get(
+      _uri('/api/user'),
+      headers: await _authHeaders(),
+    );
+    if (res.statusCode != 200) {
+      throw ApiException.fromHttpBody(
+        statusCode: res.statusCode,
+        body: res.body,
+        fallbackMessage: 'Сессия недействительна',
+      );
+    }
   }
 
   Future<void> logout() async {
