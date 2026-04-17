@@ -30,13 +30,15 @@ cd mentor_app
 flutter pub get
 ```
 
-Базовый URL API (по умолчанию `http://localhost:8000` в [lib/core/constants/api_constants.dart](lib/core/constants/api_constants.dart)):
+Базовый URL API по умолчанию — **продакшен** `https://n1mail.online` ([lib/core/constants/api_constants.dart](lib/core/constants/api_constants.dart)). Пути к API добавляются как `/api/...`.
+
+Локальная разработка против Laragon:
 
 ```bash
-flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8000
+flutter run --dart-define=API_BASE_URL=http://127.0.0.1:8000
 ```
 
-На Android-эмуляторе для доступа к хосту ПК используйте `10.0.2.2`. На реальном устройстве — LAN IP машины с Laragon / `php artisan serve`. Cleartext в debug: [android/app/src/debug/AndroidManifest.xml](android/app/src/debug/AndroidManifest.xml).
+На Android-эмуляторе к хосту ПК: `--dart-define=API_BASE_URL=http://10.0.2.2:8000`. Cleartext в debug: [android/app/src/debug/AndroidManifest.xml](android/app/src/debug/AndroidManifest.xml).
 
 Вход в приложение — те же **email / password**, что у пользователя Laravel (регистрация через веб-часть Fortify).
 
