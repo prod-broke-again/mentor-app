@@ -1,0 +1,80 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: mentor-app:latest
+    container_name: mentor-app-app
+    restart: unless-stopped
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./:/var/www/html
+    networks:
+      - mentor-net
+
+  queue:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: mentor-app:latest
+    container_name: mentor-app-queue
+    restart: unless-stopped
+    command: php artisan queue:work --tries=1 --sleep=3 --timeout=120
+    depends_on:
+      db:
+        condition: service_healthy
+      app:
+        condition: service_started
+    volumes:
+      - ./:/var/www/html
+    networks:
+      - mentor-net
+
+  web:
+    image: nginx:1.27-alpine
+    container_name: mentor-app-web
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./:/var/www/html:ro
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    depends_on:
+      app:
+        condition: service_started
+    networks:
+      - mentor-net
+
+  db:
+    image: mysql:8.4
+    container_name: mentor-app-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-mentor_app}
+      MYSQL_USER: ${DB_USERNAME:-mentor}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-mentor_pass}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root_pass}
+    volumes:
+      - mentor-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p$$MYSQL_ROOT_PASSWORD || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    networks:
+      - mentor-net
+
+networks:
+  mentor-net:
+    driver: bridge
+
+volumes:
+  mentor-db-data:
