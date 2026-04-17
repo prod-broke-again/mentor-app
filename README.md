@@ -70,7 +70,7 @@ curl -X POST http://localhost:8000/api/ai/ask ^
 
 ### Клиент Flutter (кратко про UI)
 
-**Minimalist Soft UI:** палитра через **`ThemeExtension<SoftUiColors>`**, темы light/dark и **Instrument Sans** (`google_fonts`), спокойный фон, мягкие тени, кольцо прогресса «Вьетнам», сообщения ментора с **Markdown** (`flutter_markdown`), микрофон push-to-talk, биометрия при старте при наличии токена. Детали — в [mentor_app/README.md](mentor_app/README.md).
+**Zinc + muted rose:** палитра через **`ThemeExtension<SoftUiColors>`**, темы light/dark и **Inter** (`google_fonts`), компактный топбар с горизонтальным прогрессом, суббар и быстрые чипы, чат-пузыри и композер как в HTML-макете, **Markdown** (`flutter_markdown`), удержание микрофона в строке ввода, биометрия при старте. Детали — в [mentor_app/README.md](mentor_app/README.md).
 
 ### Безопасность
 

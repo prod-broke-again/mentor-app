@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/theme/soft_ui_colors.dart';
 
-/// Calm background: solid surface + optional very subtle grid (no neon).
+/// Near-solid background; very subtle grid (reference phone shell).
 class AmbientBackground extends StatelessWidget {
   const AmbientBackground({super.key, this.child});
 
@@ -10,7 +10,7 @@ class AmbientBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final soft = Theme.of(context).extension<SoftUiColors>() ?? SoftUiColors.light;
+    final soft = Theme.of(context).extension<SoftUiColors>() ?? SoftUiColors.dark;
     final brightness = Theme.of(context).brightness;
 
     return Stack(
@@ -22,22 +22,6 @@ class AmbientBackground extends StatelessWidget {
             painter: _SoftGridPainter(
               gridColor: soft.gridLine,
               brightness: brightness,
-            ),
-            child: const SizedBox.expand(),
-          ),
-        ),
-        IgnorePointer(
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  soft.accent.withValues(alpha: brightness == Brightness.dark ? 0.04 : 0.03),
-                  Colors.transparent,
-                  soft.background.withValues(alpha: 0),
-                ],
-              ),
             ),
             child: const SizedBox.expand(),
           ),
@@ -61,7 +45,7 @@ class _SoftGridPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final alpha = brightness == Brightness.dark ? 0.045 : 0.035;
+    final alpha = brightness == Brightness.dark ? 0.022 : 0.03;
     final paint = Paint()
       ..color = gridColor.withValues(alpha: alpha)
       ..strokeWidth = 0.5

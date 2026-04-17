@@ -5,6 +5,7 @@ use App\Http\Controllers\AIProcessController;
 use App\Http\Controllers\Api\ActivitySessionController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\MentorMessageActionController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('ai/ask', [AiController::class, 'ask'])->middleware('throttle:30,1');
@@ -18,6 +19,7 @@ Route::middleware('auth:sanctum')->group(function (): void {
     Route::get('user', [AuthController::class, 'user']);
     Route::get('dashboard', DashboardController::class);
     Route::post('ai/process', AIProcessController::class)->middleware('throttle:20,1');
+    Route::post('mentor/messages/{mentorMessage}/apply-action', MentorMessageActionController::class);
 
     Route::prefix('v1')->middleware('throttle:300,1')->group(function (): void {
         Route::post('activity/sessions', [ActivitySessionController::class, 'store']);

@@ -1,101 +1,144 @@
 import 'package:flutter/material.dart';
 
-/// Semantic colors aligned with `resources/css/app.css` (Soft UI palette).
+/// Design tokens: zinc neutrals + muted rose accent (see HTML reference).
 @immutable
 class SoftUiColors extends ThemeExtension<SoftUiColors> {
   const SoftUiColors({
     required this.background,
     required this.surface,
-    required this.surfaceElevated,
+    required this.surfaceBubble,
+    required this.surfaceRaised,
     required this.outline,
     required this.outlineStrong,
     required this.accent,
+    required this.accentSoft,
     required this.accentForeground,
-    required this.accentMuted,
+    required this.accentGhost,
+    required this.accentLine,
+    required this.textPrimary,
+    required this.textDim,
+    required this.textMute,
     required this.success,
+    required this.warn,
     required this.gridLine,
   });
 
   final Color background;
   final Color surface;
-  final Color surfaceElevated;
+  /// Incoming message bubbles, composer well.
+  final Color surfaceBubble;
+  final Color surfaceRaised;
   final Color outline;
   final Color outlineStrong;
   final Color accent;
+  final Color accentSoft;
   final Color accentForeground;
-  final Color accentMuted;
+  final Color accentGhost;
+  final Color accentLine;
+  final Color textPrimary;
+  final Color textDim;
+  final Color textMute;
   final Color success;
+  final Color warn;
   final Color gridLine;
 
-  /// Light theme tokens (calm teal accent, warm neutrals).
-  static const SoftUiColors light = SoftUiColors(
-    background: Color(0xFFF8F9FA),
-    surface: Color(0xFFFFFFFF),
-    surfaceElevated: Color(0xFFFFFFFF),
-    outline: Color(0xFFE2E8F0),
-    outlineStrong: Color(0xFFCBD5E1),
-    accent: Color(0xFF2D8A7A),
-    accentForeground: Color(0xFFFFFFFF),
-    accentMuted: Color(0xFF4AA899),
-    success: Color(0xFF3D8B6E),
-    gridLine: Color(0xFF94A3B8),
+  /// Dark: zinc-950-ish + muted rose.
+  static final SoftUiColors dark = SoftUiColors(
+    background: const Color(0xFF0B0B0D),
+    surface: const Color(0xFF131316),
+    surfaceBubble: const Color(0xFF1B1B1F),
+    surfaceRaised: const Color(0xFF232328),
+    outline: const Color(0xFF2A2A30),
+    outlineStrong: const Color(0xFF3A3A42),
+    accent: const Color(0xFFE4678A),
+    accentSoft: const Color(0xFFC25170),
+    accentForeground: const Color(0xFF1A0E12),
+    accentGhost: const Color(0x1FE4678A),
+    accentLine: const Color(0x47E4678A),
+    textPrimary: const Color(0xFFE7E7EA),
+    textDim: const Color(0xFFA1A1AA),
+    textMute: const Color(0xFF71717A),
+    success: const Color(0xFF86C5A5),
+    warn: const Color(0xFFE0B06A),
+    gridLine: const Color(0xFF2A2A30),
   );
 
-  /// Dark theme (deep blue-gray, not pure black).
-  static const SoftUiColors dark = SoftUiColors(
-    background: Color(0xFF1A1F2E),
-    surface: Color(0xFF242B3D),
-    surfaceElevated: Color(0xFF2D3548),
-    outline: Color(0xFF3D4759),
-    outlineStrong: Color(0xFF4A5568),
-    accent: Color(0xFF5CBFB0),
-    accentForeground: Color(0xFF0F1419),
-    accentMuted: Color(0xFF3D9A8C),
-    success: Color(0xFF6BC49A),
-    gridLine: Color(0xFF64748B),
+  /// Light: zinc-50/100 surfaces, same rose accent.
+  static final SoftUiColors light = SoftUiColors(
+    background: const Color(0xFFF4F4F5),
+    surface: const Color(0xFFFFFFFF),
+    surfaceBubble: const Color(0xFFF4F4F5),
+    surfaceRaised: const Color(0xFFE4E4E7),
+    outline: const Color(0xFFE4E4E7),
+    outlineStrong: const Color(0xFFD4D4D8),
+    accent: const Color(0xFFC25170),
+    accentSoft: const Color(0xFFA84363),
+    accentForeground: const Color(0xFF1A0E12),
+    accentGhost: const Color(0x14C25170),
+    accentLine: const Color(0x47C25170),
+    textPrimary: const Color(0xFF18181B),
+    textDim: const Color(0xFF52525B),
+    textMute: const Color(0xFF71717A),
+    success: const Color(0xFF4D8B6E),
+    warn: const Color(0xFFB8860B),
+    gridLine: const Color(0xFFD4D4D8),
   );
 
-  /// Soft outer shadow for elevated cards / buttons.
-  static List<BoxShadow> shadowRaised(Brightness brightness) {
-    final a = brightness == Brightness.dark ? 0.45 : 0.07;
-    return [
-      BoxShadow(
-        color: Color.fromRGBO(15, 23, 42, a),
-        blurRadius: 24,
-        offset: const Offset(0, 10),
-        spreadRadius: -4,
-      ),
-      BoxShadow(
-        color: Color.fromRGBO(15, 23, 42, brightness == Brightness.dark ? 0.2 : 0.03),
-        blurRadius: 6,
-        offset: const Offset(0, 2),
-      ),
-    ];
-  }
+  /// Reference CSS: inset highlight + soft drop shadow.
+  static List<BoxShadow> insetTopGlow() => [
+        BoxShadow(
+          color: Colors.white.withValues(alpha: 0.03),
+          offset: const Offset(0, 1),
+          blurRadius: 0,
+          spreadRadius: 0,
+        ),
+      ];
+
+  static List<BoxShadow> shadowDropped({double opacity = 0.25}) => [
+        BoxShadow(
+          color: Colors.black.withValues(alpha: opacity),
+          blurRadius: 24,
+          offset: const Offset(0, 8),
+        ),
+      ];
 
   @override
   SoftUiColors copyWith({
     Color? background,
     Color? surface,
-    Color? surfaceElevated,
+    Color? surfaceBubble,
+    Color? surfaceRaised,
     Color? outline,
     Color? outlineStrong,
     Color? accent,
+    Color? accentSoft,
     Color? accentForeground,
-    Color? accentMuted,
+    Color? accentGhost,
+    Color? accentLine,
+    Color? textPrimary,
+    Color? textDim,
+    Color? textMute,
     Color? success,
+    Color? warn,
     Color? gridLine,
   }) =>
       SoftUiColors(
         background: background ?? this.background,
         surface: surface ?? this.surface,
-        surfaceElevated: surfaceElevated ?? this.surfaceElevated,
+        surfaceBubble: surfaceBubble ?? this.surfaceBubble,
+        surfaceRaised: surfaceRaised ?? this.surfaceRaised,
         outline: outline ?? this.outline,
         outlineStrong: outlineStrong ?? this.outlineStrong,
         accent: accent ?? this.accent,
+        accentSoft: accentSoft ?? this.accentSoft,
         accentForeground: accentForeground ?? this.accentForeground,
-        accentMuted: accentMuted ?? this.accentMuted,
+        accentGhost: accentGhost ?? this.accentGhost,
+        accentLine: accentLine ?? this.accentLine,
+        textPrimary: textPrimary ?? this.textPrimary,
+        textDim: textDim ?? this.textDim,
+        textMute: textMute ?? this.textMute,
         success: success ?? this.success,
+        warn: warn ?? this.warn,
         gridLine: gridLine ?? this.gridLine,
       );
 
@@ -105,13 +148,20 @@ class SoftUiColors extends ThemeExtension<SoftUiColors> {
     return SoftUiColors(
       background: Color.lerp(background, other.background, t)!,
       surface: Color.lerp(surface, other.surface, t)!,
-      surfaceElevated: Color.lerp(surfaceElevated, other.surfaceElevated, t)!,
+      surfaceBubble: Color.lerp(surfaceBubble, other.surfaceBubble, t)!,
+      surfaceRaised: Color.lerp(surfaceRaised, other.surfaceRaised, t)!,
       outline: Color.lerp(outline, other.outline, t)!,
       outlineStrong: Color.lerp(outlineStrong, other.outlineStrong, t)!,
       accent: Color.lerp(accent, other.accent, t)!,
+      accentSoft: Color.lerp(accentSoft, other.accentSoft, t)!,
       accentForeground: Color.lerp(accentForeground, other.accentForeground, t)!,
-      accentMuted: Color.lerp(accentMuted, other.accentMuted, t)!,
+      accentGhost: Color.lerp(accentGhost, other.accentGhost, t)!,
+      accentLine: Color.lerp(accentLine, other.accentLine, t)!,
+      textPrimary: Color.lerp(textPrimary, other.textPrimary, t)!,
+      textDim: Color.lerp(textDim, other.textDim, t)!,
+      textMute: Color.lerp(textMute, other.textMute, t)!,
       success: Color.lerp(success, other.success, t)!,
+      warn: Color.lerp(warn, other.warn, t)!,
       gridLine: Color.lerp(gridLine, other.gridLine, t)!,
     );
   }

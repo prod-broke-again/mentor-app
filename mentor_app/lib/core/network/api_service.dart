@@ -158,5 +158,21 @@ final class ApiService {
     return jsonDecode(res.body) as Map<String, dynamic>;
   }
 
+  /// POST /api/mentor/messages/{id}/apply-action
+  Future<Map<String, dynamic>> applyMentorAction(int mentorMessageId) async {
+    final res = await _client.post(
+      _uri('/api/mentor/messages/$mentorMessageId/apply-action'),
+      headers: await _jsonHeaders(),
+    );
+    if (res.statusCode != 200) {
+      throw ApiException.fromHttpBody(
+        statusCode: res.statusCode,
+        body: res.body,
+        fallbackMessage: 'Не удалось сохранить действие',
+      );
+    }
+    return jsonDecode(res.body) as Map<String, dynamic>;
+  }
+
   void dispose() => _client.close();
 }

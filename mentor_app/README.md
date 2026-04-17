@@ -5,16 +5,15 @@
 Родительский проект и API: [корневой README](../README.md).  
 Репозиторий на GitHub: **https://github.com/prod-broke-again/mentor-app**
 
-## UI (Minimalist Soft UI)
+## UI (zinc + muted rose, чат как в HTML-референсе)
 
-- **`ThemeExtension<SoftUiColors>`** — семантические цвета (фон, surface, акцент, границы, сетка) в [lib/core/theme/soft_ui_colors.dart](lib/core/theme/soft_ui_colors.dart), темы **light/dark** в [lib/core/theme/app_theme.dart](lib/core/theme/app_theme.dart) (Material 3 + **Instrument Sans** через `google_fonts`).
+- **`ThemeExtension<SoftUiColors>`** — палитра **zinc** + приглушённый **rose** (`#e4678a` / `#c25170`), уровни surface/bubble/raised, текст `textPrimary` / `textDim` / `textMute` — [lib/core/theme/soft_ui_colors.dart](lib/core/theme/soft_ui_colors.dart). Темы **light/dark** + **Inter** в [lib/core/theme/app_theme.dart](lib/core/theme/app_theme.dart).
 - **Быстрый вход:** при сохранённом токене — опциональный запрос биометрии (`local_auth`), затем проверка сессии `GET /api/user` ([lib/app.dart](lib/app.dart), [lib/core/security/biometric_auth.dart](lib/core/security/biometric_auth.dart)).
 - **[lib/features/finance/presentation/widgets/](lib/features/finance/presentation/widgets/)**
   - `ambient_background.dart` — спокойный фон и едва заметная сетка.
   - `vietnam_progress_ring.dart` — мягкое кольцо прогресса без неона.
   - `mentor_message_bubble.dart` — карточка сообщения + Markdown.
-  - `soft_mic_button.dart` — круглая кнопка микрофона (soft shadow).
-- **[lib/features/finance/presentation/widgets/home/](lib/features/finance/presentation/widgets/home/)** — `HomeTopBar`, `HomeInputRow`, `HomeProgressHeaderDelegate` (вынесены из `home_page`).
+- **[lib/features/finance/presentation/widgets/home/](lib/features/finance/presentation/widgets/home/)** — `HomeTopBar` (бренд + точка + горизонтальный прогресс), `HomeSubBar`, `HomeQuickBar`, `HomeInputRow` (композер: поле + микрофон + градиент «Отправить»).
 - **[lib/features/finance/presentation/pages/home_page.dart](lib/features/finance/presentation/pages/home_page.dart)** — основной экран чата и прогресса.
 
 Зависимость **`flutter_markdown`** указана в [pubspec.yaml](pubspec.yaml).

@@ -27,3 +27,12 @@ final class HomeMicPressed extends HomeEvent {
 final class HomeMicReleased extends HomeEvent {
   const HomeMicReleased();
 }
+
+final class HomeMentorActionApplied extends HomeEvent {
+  const HomeMentorActionApplied(this.messageId);
+
+  final int messageId;
+
+  @override
+  List<Object?> get props => [messageId];
+}

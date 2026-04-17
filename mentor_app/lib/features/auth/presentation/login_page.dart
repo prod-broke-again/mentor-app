@@ -58,9 +58,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final soft = Theme.of(context).extension<SoftUiColors>() ?? SoftUiColors.light;
+    final soft = Theme.of(context).extension<SoftUiColors>() ?? SoftUiColors.dark;
     final scheme = Theme.of(context).colorScheme;
-    final brightness = Theme.of(context).brightness;
 
     return Scaffold(
       backgroundColor: soft.background,
@@ -79,25 +78,25 @@ class _LoginPageState extends State<LoginPage> {
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                         fontWeight: FontWeight.w700,
                         letterSpacing: -0.8,
-                        color: scheme.onSurface,
+                        color: soft.textPrimary,
                       ),
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Спокойный вход в приложение',
+                  'Вход в аккаунт',
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: scheme.onSurfaceVariant,
+                        color: soft.textDim,
                       ),
                 ),
                 const SizedBox(height: 40),
                 Container(
                   padding: const EdgeInsets.all(24),
                   decoration: BoxDecoration(
-                    color: soft.surfaceElevated,
+                    color: soft.surfaceBubble,
                     borderRadius: BorderRadius.circular(24),
-                    border: Border.all(color: soft.outline.withValues(alpha: 0.9)),
-                    boxShadow: SoftUiColors.shadowRaised(brightness),
+                    border: Border.all(color: soft.outline),
+                    boxShadow: SoftUiColors.shadowDropped(),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -143,6 +142,7 @@ class _LoginPageState extends State<LoginPage> {
                           _generalError!,
                           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                 color: scheme.error,
+                                height: 1.35,
                               ),
                         ),
                       ],
@@ -165,7 +165,7 @@ class _LoginPageState extends State<LoginPage> {
                   'После входа сессия может запрашивать биометрию на этом устройстве.',
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: scheme.onSurfaceVariant,
+                        color: soft.textMute,
                         height: 1.45,
                       ),
                 ),

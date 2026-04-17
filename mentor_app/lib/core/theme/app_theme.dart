@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'soft_ui_colors.dart';
 
-/// Minimalist Soft UI — light & dark Material 3 themes.
 abstract final class AppTheme {
   static ThemeData lightSoft() => _build(brightness: Brightness.light, soft: SoftUiColors.light);
 
@@ -19,28 +18,28 @@ abstract final class AppTheme {
       brightness: brightness,
       primary: soft.accent,
       onPrimary: soft.accentForeground,
-      secondary: soft.accentMuted,
+      secondary: soft.accentSoft,
       onSecondary: soft.accentForeground,
-      error: brightness == Brightness.dark ? const Color(0xFFF87171) : const Color(0xFFDC2626),
-      onError: Colors.white,
+      error: const Color(0xFFE87990),
+      onError: soft.accentForeground,
       surface: soft.surface,
-      onSurface: brightness == Brightness.dark ? const Color(0xFFE8EAED) : const Color(0xFF2D3436),
-      onSurfaceVariant: brightness == Brightness.dark ? const Color(0xFF9CA3AF) : const Color(0xFF64748B),
+      onSurface: soft.textPrimary,
+      onSurfaceVariant: soft.textDim,
       outline: soft.outline,
       outlineVariant: soft.outlineStrong,
-      shadow: Colors.black.withValues(alpha: brightness == Brightness.dark ? 0.4 : 0.08),
+      shadow: Colors.black.withValues(alpha: brightness == Brightness.dark ? 0.35 : 0.1),
       scrim: Colors.black54,
-      inverseSurface: brightness == Brightness.dark ? const Color(0xFFF1F5F9) : const Color(0xFF1E293B),
-      onInverseSurface: brightness == Brightness.dark ? const Color(0xFF1E293B) : const Color(0xFFF8FAFC),
-      inversePrimary: soft.accentMuted,
+      inverseSurface: soft.textPrimary,
+      onInverseSurface: soft.background,
+      inversePrimary: soft.accentSoft,
       surfaceTint: soft.accent,
       tertiary: soft.success,
-      onTertiary: Colors.white,
+      onTertiary: soft.accentForeground,
     );
 
-    final textTheme = GoogleFonts.instrumentSansTextTheme(base.textTheme).apply(
-      bodyColor: colorScheme.onSurface,
-      displayColor: colorScheme.onSurface,
+    final textTheme = GoogleFonts.interTextTheme(base.textTheme).apply(
+      bodyColor: soft.textPrimary,
+      displayColor: soft.textPrimary,
     );
 
     return base.copyWith(
@@ -52,15 +51,15 @@ abstract final class AppTheme {
         elevation: 0,
         scrolledUnderElevation: 0,
         backgroundColor: soft.background,
-        foregroundColor: colorScheme.onSurface,
+        foregroundColor: soft.textPrimary,
         titleTextStyle: textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
       ),
       cardTheme: CardThemeData(
         elevation: 0,
-        color: soft.surfaceElevated,
+        color: soft.surface,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-          side: BorderSide(color: soft.outline.withValues(alpha: 0.6)),
+          borderRadius: BorderRadius.circular(16),
+          side: BorderSide(color: soft.outline),
         ),
         shadowColor: Colors.transparent,
       ),
@@ -68,13 +67,13 @@ abstract final class AppTheme {
         style: FilledButton.styleFrom(
           elevation: 0,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           shadowColor: Colors.transparent,
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: soft.surface,
+        fillColor: soft.surfaceBubble,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: BorderSide(color: soft.outline),
@@ -85,20 +84,20 @@ abstract final class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: BorderSide(color: soft.accent, width: 2),
+          borderSide: BorderSide(color: soft.accentLine, width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: BorderSide(color: colorScheme.error),
         ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        labelStyle: textTheme.bodyMedium?.copyWith(color: colorScheme.onSurfaceVariant),
-        hintStyle: textTheme.bodyMedium?.copyWith(color: colorScheme.onSurfaceVariant.withValues(alpha: 0.7)),
+        labelStyle: textTheme.bodyMedium?.copyWith(color: soft.textDim),
+        hintStyle: textTheme.bodyMedium?.copyWith(color: soft.textMute),
       ),
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
-        backgroundColor: soft.surfaceElevated,
-        contentTextStyle: textTheme.bodyMedium?.copyWith(color: colorScheme.onSurface),
+        backgroundColor: soft.surfaceBubble,
+        contentTextStyle: textTheme.bodyMedium?.copyWith(color: soft.textPrimary),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(14),
           side: BorderSide(color: soft.outline),

@@ -31,7 +31,7 @@ class VietnamProgressRing extends StatelessWidget {
             painter: _SoftRingPainter(
               progress: p,
               track: soft.outline.withValues(alpha: 0.45),
-              start: soft.accentMuted,
+              start: soft.accentSoft,
               end: soft.accent,
             ),
             child: Center(

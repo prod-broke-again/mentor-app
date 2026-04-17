@@ -18,4 +18,8 @@ final class DashboardRepository {
   Future<void> sendMentorAudio(String filePath) async {
     await _api.processAiAudioFile(filePath);
   }
+
+  Future<void> applyMentorAction(int mentorMessageId) async {
+    await _api.applyMentorAction(mentorMessageId);
+  }
 }

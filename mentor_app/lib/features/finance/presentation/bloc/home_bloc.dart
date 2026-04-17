@@ -17,6 +17,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<HomeAiTextSent>(_onAiText);
     on<HomeMicPressed>(_onMicPressed);
     on<HomeMicReleased>(_onMicReleased);
+    on<HomeMentorActionApplied>(_onMentorActionApplied);
   }
 
   final DashboardRepository _repository;
@@ -84,6 +85,22 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       try {
         await File(effectivePath).delete();
       } catch (_) {}
+      final data = await _repository.loadDashboard();
+      emit(state.copyWith(isSendingAi: false, dashboard: data, status: HomeStatus.ready));
+    } on ApiException catch (e) {
+      emit(state.copyWith(isSendingAi: false, errorMessage: e.message));
+    } catch (e) {
+      emit(state.copyWith(isSendingAi: false, errorMessage: e.toString()));
+    }
+  }
+
+  Future<void> _onMentorActionApplied(
+    HomeMentorActionApplied event,
+    Emitter<HomeState> emit,
+  ) async {
+    emit(state.copyWith(isSendingAi: true, clearError: true));
+    try {
+      await _repository.applyMentorAction(event.messageId);
       final data = await _repository.loadDashboard();
       emit(state.copyWith(isSendingAi: false, dashboard: data, status: HomeStatus.ready));
     } on ApiException catch (e) {
